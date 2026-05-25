@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodeapp
+  namespace: nodeapp
+  labels:
+    app.kubernetes.io/name: nodeapp
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: nodeapp
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

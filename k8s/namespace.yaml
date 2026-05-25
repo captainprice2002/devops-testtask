@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nodeapp
+  labels:
+    app.kubernetes.io/name: nodeapp
+    app.kubernetes.io/part-of: devops-test
