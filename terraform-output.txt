@@ -1,0 +1,22 @@
+terraform output
+
+cluster_endpoint = "https://ABA2B26D9E21E37986B20573DA96CE6A.gr7.eu-central-1.eks.amazonaws.com"
+cluster_name = "devops-test-eks"
+database_subnets = [
+  "subnet-08adf52746e025f70",
+  "subnet-0bf46a85413ac6142",
+  "subnet-08827c56aca0e1dc8",
+]
+ecr_repository_url = "056300054271.dkr.ecr.eu-central-1.amazonaws.com/devops-test/nodeapp"
+private_subnets = [
+  "subnet-0eaffc2bd2a2b8389",
+  "subnet-03d22f23f8598efb2",
+  "subnet-0631078f967cc655a",
+]
+public_subnets = [
+  "subnet-05c4a334b54862f49",
+  "subnet-0d649873cbdf49c3f",
+  "subnet-04450948f3e53f8be",
+]
+region = "eu-central-1"
+vpc_id = "vpc-02c6793a04c80f7c4"
