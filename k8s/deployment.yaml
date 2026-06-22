@@ -6,7 +6,8 @@ metadata:
   labels:
     app.kubernetes.io/name: nodeapp
 spec:
-  replicas: 1
+  replicas: 2
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       app.kubernetes.io/name: nodeapp
@@ -15,11 +16,14 @@ spec:
       labels:
         app.kubernetes.io/name: nodeapp
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: nodeapp
-          # TODO(candidate): replace with the ECR repository URL output by terraform.
-          image: REPLACE_WITH_ECR_URL:latest
-          imagePullPolicy: Always
+          image: 056300054271.dkr.ecr.eu-central-1.amazonaws.com/devops-test/nodeapp:app-8922114
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 3000
@@ -27,6 +31,8 @@ spec:
           env:
             - name: PORT
               value: "3000"
+            - name: HOST
+              value: "0.0.0.0"
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -56,5 +62,6 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             runAsNonRoot: true
+            runAsUser: 1000
             capabilities:
               drop: ["ALL"]

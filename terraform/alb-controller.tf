@@ -31,7 +31,7 @@ module "alb_controller_irsa" {
     main = {
       provider_arn = module.eks.oidc_provider_arn
       # The service account the Helm chart creates lives in kube-system.
-      namespace_service_accounts = ["kube-system:alb-controller"]
+      namespace_service_accounts = ["kube-system:aws-load-balancer-controller"]
     }
   }
 }
@@ -73,6 +73,5 @@ resource "helm_release" "aws_load_balancer_controller" {
     value = module.vpc.vpc_id
   }
 
-  depends_on = [module.eks]
+  depends_on = [module.eks, module.alb_controller_irsa]
 }
-

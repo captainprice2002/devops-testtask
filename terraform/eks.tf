@@ -5,20 +5,20 @@ module "eks" {
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
 
-  cluster_endpoint_public_access  = true
-  cluster_endpoint_private_access = true
+  cluster_endpoint_public_access       = true
+  cluster_endpoint_private_access      = true
+  cluster_endpoint_public_access_cidrs = ["46.49.73.198/32"]
 
   enable_irsa = true
 
   vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.public_subnets
+  subnet_ids = module.vpc.private_subnets
 
-  # Fargate-only cluster. We declare profiles for kube-system (CoreDNS / metrics)
-  # and for our workloads.
+  # Fargate-only cluster. CoreDNS, the AWS Load Balancer Controller, and the
+  # application all need matching profiles because there are no EC2 nodes.
   fargate_profiles = {
-    # CoreDNS must run on Fargate too — there are no EC2 nodes in this cluster.
-    kube_system = {
-      name = "kube-system"
+    coredns = {
+      name = "coredns"
       selectors = [
         {
           namespace = "kube-system"
@@ -27,18 +27,30 @@ module "eks" {
           }
         }
       ]
-      subnet_ids = aws_subnet.public_data[*].id
+      subnet_ids = module.vpc.private_subnets
     }
 
-    # Workload Fargate profile.
+    alb_controller = {
+      name = "alb-controller"
+      selectors = [
+        {
+          namespace = "kube-system"
+          labels = {
+            "app.kubernetes.io/name" = "aws-load-balancer-controller"
+          }
+        }
+      ]
+      subnet_ids = module.vpc.private_subnets
+    }
+
     apps = {
       name = "apps"
       selectors = [
         {
-          namespace = "default"
+          namespace = var.app_namespace
         }
       ]
-      subnet_ids = aws_subnet.public_data[*].id
+      subnet_ids = module.vpc.private_subnets
     }
   }
 
