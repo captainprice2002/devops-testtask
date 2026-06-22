@@ -11,23 +11,15 @@ locals {
 
 resource "aws_security_group" "vpc_endpoints" {
   name        = "${var.project}-vpc-endpoints"
-  description = "Allow private subnets to reach interface VPC endpoints"
+  description = "Allow private subnet workloads to reach interface VPC endpoints"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    description = "HTTPS from VPC"
+    description = "HTTPS from private subnets"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr]
-  }
-
-  egress {
-    description = "All outbound"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = local.private_subnets
   }
 
   tags = {

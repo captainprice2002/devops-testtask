@@ -2,4 +2,5 @@
 *.tfstate
 *.tfstate.*
 *.tfplan
-plan.txt
+terraform/plan.txt
+SOLUTION_NOTES.md
