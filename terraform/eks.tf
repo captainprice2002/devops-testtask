@@ -54,10 +54,13 @@ module "eks" {
     }
   }
 
-  # Cluster add-ons. CoreDNS is patched to run on Fargate via the compute config.
+  # Pin managed addon versions so Terraform plans are deterministic and addon
+  # upgrades happen intentionally during reviewed cluster upgrade work, rather
+  # than automatically whenever AWS publishes a newer build. CoreDNS is patched
+  # to run on Fargate via the compute config.
   cluster_addons = {
     coredns = {
-      most_recent = true
+      addon_version = "v1.11.4-eksbuild.40"
       configuration_values = jsonencode({
         computeType = "Fargate"
         resources = {
@@ -67,10 +70,10 @@ module "eks" {
       })
     }
     kube-proxy = {
-      most_recent = true
+      addon_version = "v1.30.14-eksbuild.38"
     }
     vpc-cni = {
-      most_recent = true
+      addon_version = "v1.22.2-eksbuild.1"
     }
   }
 
