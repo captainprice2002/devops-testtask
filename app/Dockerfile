@@ -7,7 +7,8 @@ RUN npm install --omit=dev
 FROM node:20-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production \
-    PORT=3000
+    PORT=3000 \
+    HOST=0.0.0.0
 COPY --from=deps /app/node_modules ./node_modules
 COPY server.js ./
 COPY package.json ./
@@ -18,4 +19,6 @@ COPY package.json ./
 USER 1000
 
 EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/health >/dev/null || exit 1
 CMD ["node", "server.js"]
