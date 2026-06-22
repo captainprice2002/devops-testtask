@@ -22,7 +22,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nodeapp
-          image: 056300054271.dkr.ecr.eu-central-1.amazonaws.com/devops-test/nodeapp:app-8922114
+          image: 056300054271.dkr.ecr.eu-central-1.amazonaws.com/devops-test/nodeapp:app-8922114-amd64
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -7,3 +7,4 @@
 - Default network ACLs are left in place intentionally. Security groups are the primary stateful control plane here; restrictive stateless NACLs are easy to misconfigure for Kubernetes/Fargate ephemeral traffic and are better added only with a clear compliance-driven traffic matrix.
 - The EKS public endpoint is restricted to the candidate workstation public IP for this assignment. For production, replace this with stable VPN/office/CI egress CIDRs or run private-only API access through VPN, Direct Connect, or a controlled bastion path.
 - The AWS Load Balancer Controller uses the upstream IAM policy. For production, review and trim permissions against the exact ingress features in use.
+- The app is kept as plain Kubernetes manifests because the assignment requires `kubectl apply -f k8s/`. For a multi-environment production service, Helm, Kustomize, or a GitOps controller would be a better way to manage environment-specific values and release promotion.
